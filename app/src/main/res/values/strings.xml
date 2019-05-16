@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">PManager</string>
+
+    <string name="title_activity_password_list">PasswordList</string>
+    <string name="title_activity_password_details">Details</string>
+    <string name="save">Save</string>
+    <string name="add_password">Add_password</string>
+    <string name="name">Name:</string>
+    <string name="login">Login:</string>
+    <string name="password">Password:</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="new_login" />
+    <string name="confirm_delete">Do you really want to delete this login?</string>
+    <string name="empty_list">(нет заметок)</string>
+
+</resources>
