@@ -3,9 +3,7 @@ package com.example.pmanager;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import android.support.v7.app.AlertDialog;
@@ -25,18 +23,12 @@ public class PasswordDetails extends AppCompatActivity {
     public static final int RESULT_SAVE = 100;
     public static final int RESULT_DELETE = 101;
     private static final int NAME_LENGTH = 20;
-
-
     private EditText txtName;
     private EditText txtLogin;
     private EditText txtPassword;
-
     private ImageButton btnCopyLogin;
     private ImageButton btnCopyPassword;
-
-
     private Document document;
-
     ClipboardManager clipboardManager;
     ClipData clipData;
 
@@ -44,49 +36,39 @@ public class PasswordDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-                setSupportActionBar(toolbar);
-                }
-
+            setSupportActionBar(toolbar);
+        }
 
         txtName = (EditText) findViewById(R.id.txtName);
         txtLogin = (EditText) findViewById(R.id.txtlogin);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
-
-
-        document = (Document) getIntent().getSerializableExtra(PasswordList.TODO_DOCUMENT);
-
+        document = (Document) getIntent().getSerializableExtra(MainActivity.DOCUMENT);
         txtName.setText(document.getName());
         txtLogin.setText(document.getLogin());
         txtPassword.setText(document.getPassword());
-
-        btnCopyLogin = (ImageButton)findViewById(R.id.copyLogin);
-        btnCopyPassword = (ImageButton)findViewById(R.id.copyPassword);
-
-        clipboardManager=(ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
-
-        btnCopyLogin.setOnClickListener(new View.OnClickListener()  {
+        btnCopyLogin = (ImageButton) findViewById(R.id.copyLogin);
+        btnCopyPassword = (ImageButton) findViewById(R.id.copyPassword);
+        clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        btnCopyLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String text = txtLogin.getText().toString();
-                clipData = ClipData.newPlainText("text",text);
+                clipData = ClipData.newPlainText("text", text);
                 clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(getApplicationContext(),"Text Copied ",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Text Copied ", Toast.LENGTH_SHORT).show();
             }
         });
-
-        btnCopyPassword.setOnClickListener(new View.OnClickListener()  {
+        btnCopyPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String text = txtPassword.getText().toString();
-                clipData = ClipData.newPlainText("text",text);
+                clipData = ClipData.newPlainText("text", text);
                 clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(getApplicationContext(),"Text Copied ",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Text Copied ", Toast.LENGTH_SHORT).show();
             }
         });
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -96,36 +78,18 @@ public class PasswordDetails extends AppCompatActivity {
         return true;
     }
 
-    private void saveDocument(){
+    private void saveDocument() {
         StringBuilder sb = new StringBuilder(txtName.getText());
         document.setName(sb.toString());
-
-        StringBuilder sb_2 = new StringBuilder(txtPassword.getText());
-        document.setPassword(sb_2.toString());
-
-        StringBuilder sb_3 = new StringBuilder(txtLogin.getText());
-        document.setLogin(sb_2.toString());
-
         if (sb.length() > NAME_LENGTH) {
             sb.delete(NAME_LENGTH, sb.length()).append("...");
         }
-
         String tmpName = sb.toString().trim().split("\n")[0];
         String name = (tmpName.length() > 0) ? tmpName : document
                 .getName();
-
-        String tmpPassword= sb_2.toString().trim().split("\n")[0];
-        String password = (tmpPassword.length() > 0) ? tmpPassword : document
-                .getPassword();
-
-        String tmpLogin= sb_3.toString().trim().split("\n")[0];
-        String login = (tmpLogin.length() > 0) ? tmpLogin : document
-                .getLogin();
-
         document.setName(name);
-        document.setPassword(password);
-        document.setLogin(login);
-
+        document.setPassword(txtPassword.getText().toString());
+        document.setLogin(txtLogin.getText().toString());
         setResult(RESULT_SAVE, getIntent());
     }
 
@@ -133,10 +97,7 @@ public class PasswordDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-
-                if ((txtName.getText().toString().trim().length() == 0)
-                        &(txtPassword.getText().toString().trim().length() == 0)
-                        &(txtPassword.getText().toString().trim().length() == 0))  {
+                if ((txtName.getText().toString().trim().length() == 0)) {
                     setResult(RESULT_CANCELED);
                 } else {
                     saveDocument();
@@ -149,9 +110,7 @@ public class PasswordDetails extends AppCompatActivity {
                 finish();
                 return true;
             }
-
             case R.id.delete: {
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.confirm_delete);
                 builder.setPositiveButton(R.string.delete,
@@ -175,7 +134,6 @@ public class PasswordDetails extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }

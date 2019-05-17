@@ -16,13 +16,11 @@ import com.example.pmanager.objects.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PasswordList extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
-    public static String TODO_DOCUMENT = "com.example.pmanager.objects.Document";
-    public static int TODO_DETAILS_REQUEST = 1;
-
+    public static String DOCUMENT = "com.example.pmanager.objects.Document";
+    public static int DETAILS_REQUEST = 1;
     private ListView listTasks;
-
     private ArrayAdapter<Document> arrayAdapter;
     private static List<Document> listDocument = new ArrayList<Document>();
 
@@ -30,23 +28,17 @@ public class PasswordList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-                setSupportActionBar(toolbar);
-                }
-
+            setSupportActionBar(toolbar);
+        }
         listTasks = (ListView) findViewById(R.id.listPassword);
-
         listTasks.setOnItemClickListener((AdapterView.OnItemClickListener) new ListViewClickListener());
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-        fillTodoList();
-
+        fillList();
     }
 
-    private void fillTodoList() {
+    private void fillList() {
         arrayAdapter = new ArrayAdapter<Document>(getApplicationContext(),
                 R.layout.listview_row, listDocument);
         listTasks.setAdapter(arrayAdapter);
@@ -68,7 +60,6 @@ public class PasswordList extends AppCompatActivity {
                 showDocument(document);
                 return true;
             }
-
             default:
                 break;
         }
@@ -77,34 +68,28 @@ public class PasswordList extends AppCompatActivity {
 
     private void showDocument(Document todoDocument) {
         Intent intentTodoDetails = new Intent(this, PasswordDetails.class);
-        intentTodoDetails.putExtra(TODO_DOCUMENT, todoDocument);
-        startActivityForResult(intentTodoDetails, TODO_DETAILS_REQUEST);
+        intentTodoDetails.putExtra(DOCUMENT, todoDocument);
+        startActivityForResult(intentTodoDetails, DETAILS_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TODO_DETAILS_REQUEST) {
-
+        if (requestCode == DETAILS_REQUEST) {
             Document document = null;
             switch (resultCode) {
                 case RESULT_CANCELED:
-
                     break;
-
                 case PasswordDetails.RESULT_SAVE:
                     document = (Document) data
-                            .getSerializableExtra(TODO_DOCUMENT);
-
+                            .getSerializableExtra(DOCUMENT);
                     addDocument(document);
                     break;
-
                 case PasswordDetails.RESULT_DELETE:
                     document = (Document) data
-                            .getSerializableExtra(TODO_DOCUMENT);
+                            .getSerializableExtra(DOCUMENT);
                     deleteDocument((Document) data
-                            .getSerializableExtra(TODO_DOCUMENT));
+                            .getSerializableExtra(DOCUMENT));
                     break;
-
                 default:
                     break;
             }
@@ -112,36 +97,28 @@ public class PasswordList extends AppCompatActivity {
     }
 
     private void addDocument(Document document) {
-        if (document.getNumber() == null){
+        if (document.getNumber() == null) {
             listDocument.add(document);
-        }else {
+        } else {
             listDocument.set(document.getNumber(), document);
         }
-
-
         arrayAdapter.notifyDataSetChanged();
-
     }
 
     private void deleteDocument(Document document) {
 
-        listDocument.remove(document);
+        listDocument.remove(document.getNumber().intValue());
         arrayAdapter.notifyDataSetChanged();
-
     }
 
     class ListViewClickListener implements AdapterView.OnItemClickListener {
-
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
-           Document document = (Document) parent.getAdapter().getItem(position);
-           document.setNumber(position);
-           showDocument(document);
+            Document document = (Document) parent.getAdapter().getItem(position);
+            document.setNumber(position);
+            showDocument(document);
         }
-
     }
-
-
 }
 
